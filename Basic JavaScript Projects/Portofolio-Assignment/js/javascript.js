@@ -40,18 +40,8 @@ document.addEventListener('DOMContentLoaded', function() {
         const email = document.getElementById('email').value;
         const message = document.getElementById('message').value;
 
-        if (!name) {
-            alert('Name is required');
-            return;
-        }
-
-        if (!email) {
-            alert('Email is required');
-            return;
-        }
-
-        if (!message) {
-            alert('Message is required');
+        if (!name || !email || !message) {
+            alert('Please fill in all fields');
             return;
         }
 

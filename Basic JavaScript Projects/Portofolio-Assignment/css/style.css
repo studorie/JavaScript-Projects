@@ -242,6 +242,27 @@ footer {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
+/* Floating button styles */
+.floating-button {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #17a2b8;
+    color: white;
+    border: none;
+    padding: 15px 20px;
+    font-size: 18px;
+    border-radius: 50px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    z-index: 1000;
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+.floating-button:hover {
+    background-color: #138496;
+    transform: translateY(-2px);
+}
 
 /* Popup styles */
 .popup {
@@ -279,26 +300,3 @@ footer {
     text-decoration: none;
     cursor: pointer;
 }
-
-/* Animation for appearing elements */
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-}
-
-.appear {
-    animation: fadeIn 2s ease-in-out;
-}
-
-/* Apply appear animation to navigation links */
-.navbar-nav .nav-link {
-    opacity: 0;
-    animation: fadeIn 2s ease-in-out forwards;
-    animation-delay: calc(0.3s * var(--i));
-}
-
-.navbar-nav .nav-link:nth-child(1) { --i: 1; }
-.navbar-nav .nav-link:nth-child(2) { --i: 2; }
-.navbar-nav .nav-link:nth-child(3) { --i: 3; }
-.navbar-nav .nav-link:nth-child(4) { --i: 4; }
-.navbar-nav .nav-link:nth-child(5) { --i: 5; }
