@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
+    // Smooth scroll for navigation links
     var navLinks = document.querySelectorAll('.nav-link');
 
     navLinks.forEach(function(link) {
@@ -13,6 +14,26 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
+    // Popup form logic
+    var popup = document.getElementById("contact-popup");
+    var btn = document.getElementById("contact-btn");
+    var span = document.getElementsByClassName("close")[0];
+
+    btn.onclick = function() {
+        popup.style.display = "block";
+    }
+
+    span.onclick = function() {
+        popup.style.display = "none";
+    }
+
+    window.onclick = function(event) {
+        if (event.target == popup) {
+            popup.style.display = "none";
+        }
+    }
+
+    // Contact form submission
     document.getElementById('contact-form').addEventListener('submit', function(event) {
         event.preventDefault();
         const name = document.getElementById('name').value;
@@ -35,8 +56,10 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         alert('Form submitted successfully!');
+        popup.style.display = "none";
     });
 
+    // Loader
     const loader = document.getElementById('loading');
     setTimeout(() => {
         loader.style.display = 'none';
