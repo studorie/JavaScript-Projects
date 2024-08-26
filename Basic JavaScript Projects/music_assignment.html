@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assignment - Favorite Song</title>
+    <style>
+        body {
+            background: linear-gradient(135deg, #ffcc33, #ff66cc);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #fff;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            overflow: hidden;
+            animation: gradientShift 10s ease infinite;
+        }
+
+        @keyframes gradientShift {
+            0% {
+                background: linear-gradient(135deg, #ffcc33, #ff66cc);
+            }
+            50% {
+                background: linear-gradient(225deg, #ff66cc, #ffcc33);
+            }
+            100% {
+                background: linear-gradient(135deg, #ffcc33, #ff66cc);
+            }
+        }
+
+        h1 {
+            font-size: 3em;
+            margin-bottom: 20px;
+            position: relative;
+            animation: slideIn 2s ease-in-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                left: -100%;
+                opacity: 0;
+            }
+            to {
+                left: 0;
+                opacity: 1;
+            }
+        }
+
+        .video-container {
+            width: 60%;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            overflow: hidden;
+            animation: fadeIn 3s ease-in;
+            position: relative;
+            z-index: 1;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        iframe {
+            width: 100%;
+            border: none;
+            height: 315px;
+        }
+
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #ff66cc;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            animation: bounceIn 2s ease-in-out infinite alternate;
+            position: relative;
+            z-index: 2;
+        }
+
+        @keyframes bounceIn {
+            from {
+                transform: translateY(0);
+            }
+            to {
+                transform: translateY(-10px);
+            }
+        }
+
+        button:hover {
+            background-color: #ffcc33;
+        }
+
+        .sound-key {
+            position: absolute;
+            font-size: 2em;
+            animation: jump 2s ease-in-out infinite;
+            z-index: 0;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+
+        @keyframes jump {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-30px);
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>My Favorite Song</h1>
+    
+    <div class="video-container">
+        <iframe src="https://www.youtube.com/embed/jH-dirhURbM" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; 
+                gyroscope; picture-in-picture" allowfullscreen></iframe>
+    </div>
+
+    <button onclick="toggleTrail()">Click Me!</button>
+
+    <div id="sound-keys-container"></div>
+
+    <script>
+        const soundKeys = ['♪', '♫', '♬', '♩', '♭', '♮', '♯'];
+        const container = document.getElementById('sound-keys-container');
+        let positions = [];
+        let trailActive = false;
+
+        function createSoundKey(key, top, left) {
+            const element = document.createElement('div');
+            element.className = 'sound-key';
+            element.innerText = key;
+            element.style.top = top + 'px';
+            element.style.left = left + 'px';
+            container.appendChild(element);
+        }
+
+        function positionSoundKeys() {
+            const videoBounds = document.querySelector('.video-container').getBoundingClientRect();
+            positions = [
+                { top: videoBounds.top - 50, left: videoBounds.left - 50 },
+                { top: videoBounds.top - 50, left: videoBounds.right + 10 },
+                { top: videoBounds.bottom + 10, left: videoBounds.left - 50 },
+                { top: videoBounds.bottom + 10, left: videoBounds.right + 10 },
+                { top: videoBounds.top - 50, left: (videoBounds.left + videoBounds.right) / 2 - 20 },
+                { top: (videoBounds.top + videoBounds.bottom) / 2 - 20, left: videoBounds.left - 50 },
+                { top: (videoBounds.top + videoBounds.bottom) / 2 - 20, left: videoBounds.right + 10 },
+            ];
+
+            positions.forEach((pos, index) => createSoundKey(soundKeys[index], pos.top, pos.left));
+        }
+
+        window.onload = positionSoundKeys;
+
+        function toggleTrail() {
+            trailActive = !trailActive;
+            if (trailActive) {
+                document.addEventListener('mousemove', moveSoundKeys);
+                alert('Trail activated! Click the button again to deactivate.');
+            } else {
+                document.removeEventListener('mousemove', moveSoundKeys);
+                returnSoundKeys();
+            }
+        }
+
+        function moveSoundKeys(event) {
+            const soundKeyElements = document.querySelectorAll('.sound-key');
+            const spacing = 60; // Adjust spacing between notes and the cursor
+            const angleStep = (2 * Math.PI) / soundKeyElements.length;
+
+            soundKeyElements.forEach((element, index) => {
+                const angle = angleStep * index;
+                const offsetX = Math.cos(angle) * spacing;
+                const offsetY = Math.sin(angle) * spacing;
+                element.style.left = event.clientX + offsetX + 'px';
+                element.style.top = event.clientY + offsetY + 'px';
+            });
+        }
+
+        function returnSoundKeys() {
+            const soundKeyElements = document.querySelectorAll('.sound-key');
+            soundKeyElements.forEach((element, index) => {
+                const originalPosition = positions[index];
+                element.style.left = originalPosition.left + 'px';
+                element.style.top = originalPosition.top + 'px';
+            });
+        }
+    </script>
+</body>
+</html>
